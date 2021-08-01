@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <div class="test">哈哈</div>
+    <a href="">asd</a>
     <!-- 一级路由 -->
     <Routerview />
   </div>
