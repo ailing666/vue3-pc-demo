@@ -8,16 +8,21 @@
     <Routerview />
   </div>
   <!-- 底部 -->
-  <footer>底部</footer>
+  <Footer />
 </template>
 
 <script>
 import NavBar from '@/components/NavBar'
 import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 export default {
   name: 'Layout',
-  components: { NavBar, Header }
+  components: { NavBar, Header, Footer }
 }
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.main {
+  height: 600px;
+}
+</style>
