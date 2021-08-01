@@ -39,3 +39,16 @@ instance.interceptors.response.use(
     return Promise.reject(err)
   }
 )
+// 请求工具函数
+export default (url, method, submitData) => {
+  return instance({
+    // 请求地址
+    url,
+    // 请求方式
+    method,
+    // [] 设置一个动态的key, 将js表达式的执行结果当作KEY
+    // method参数：get,Get,GET  转换成小写再来判断
+    // 提交的数据 get请求用params，post请求用data
+    [method.toLowerCase() === 'get' ? 'params' : 'data']: submitData
+  })
+}
