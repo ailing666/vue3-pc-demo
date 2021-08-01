@@ -5,7 +5,7 @@
   <Header />
   <div class="main">
     <!-- 二级路由 -->
-    <Routerview />
+    <RouterView />
   </div>
   <!-- 底部 -->
   <Footer />
