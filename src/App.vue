@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <div class="test">哈哈</div>
     <!-- 一级路由 -->
     <Routerview />
   </div>
@@ -13,3 +14,9 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+.test {
+  .hoverShadow();
+  color: @helpColor;
+}
+</style>
