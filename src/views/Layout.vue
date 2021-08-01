@@ -2,7 +2,7 @@
   <!-- 顶部通栏 -->
   <NavBar />
   <!-- 头部 -->
-  <header>头部</header>
+  <Header />
   <div class="main">
     <!-- 二级路由 -->
     <Routerview />
@@ -13,9 +13,10 @@
 
 <script>
 import NavBar from '@/components/NavBar'
+import Header from '@/components/Header'
 export default {
   name: 'Layout',
-  components: { NavBar }
+  components: { NavBar, Header }
 }
 </script>
 
