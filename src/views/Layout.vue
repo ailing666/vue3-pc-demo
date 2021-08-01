@@ -1,6 +1,6 @@
 <template>
   <!-- 顶部通栏 -->
-  <nav>顶部通栏</nav>
+  <NavBar />
   <!-- 头部 -->
   <header>头部</header>
   <div class="main">
@@ -12,8 +12,10 @@
 </template>
 
 <script>
+import NavBar from '@/components/NavBar'
 export default {
-  name: 'Layout'
+  name: 'Layout',
+  components: { NavBar }
 }
 </script>
 
