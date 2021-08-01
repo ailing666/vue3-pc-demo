@@ -15,9 +15,15 @@
 import NavBar from '@/components/NavBar'
 import Header from '@/components/header'
 import Footer from '@/components/Footer'
+import { useStore } from 'vuex'
 export default {
   name: 'Layout',
-  components: { NavBar, Header, Footer }
+  components: { NavBar, Header, Footer },
+  // 获取下分类数据
+  setup () {
+    const store = useStore()
+    store.dispatch('category/getList')
+  }
 }
 </script>
 

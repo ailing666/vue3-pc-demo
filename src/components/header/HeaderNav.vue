@@ -30,8 +30,17 @@
 </template>
 
 <script>
+import { useStore } from 'vuex'
+import { computed } from 'vue'
 export default {
-  name: 'HeaderNav'
+  name: 'HeaderNav',
+  setup () {
+    const store = useStore()
+    const list = computed(() => {
+      return store.state.category.list
+    })
+    return { list }
+  }
 }
 </script>
 

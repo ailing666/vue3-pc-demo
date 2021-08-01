@@ -18,6 +18,7 @@ instance.interceptors.request.use(
       // 如果有token，在请求头带上tokrn
       config.headers.Authorization = `Bearer ${profile.token}`
     }
+    return config
   },
   err => {
     return Promise.reject(err)
