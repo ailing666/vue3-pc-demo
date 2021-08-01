@@ -1,49 +1,23 @@
 import { createStore } from 'vuex'
-const moduleA = {
-  // 子模块state建议写成函数
-  state: () => {
-    return {
-      userName: '模块A'
-    }
-  },
-  getters: {
-    changeName (state) {
-      return state.userName + 'AAAAA'
-    }
-  }
-}
+// 三个模块
+import car from '@/store/modules/car'
+import user from '@/store/modules/user'
+import category from '@/store/modules/category'
+// vuex持久化插件，实现刷新数据不会重置
+import createPersistedstate from 'vuex-persistedstate'
 
-const moduleB = {
-  namespaced: true,
-  // 子模块state建议写成函数
-  state: () => {
-    return {
-      userName: '模块B'
-    }
-  },
-  getters: {
-    changeName (state) {
-      return state.userName + 'BBBBB'
-    }
-  },
-  mutations: {
-    // 修改名字的mutation
-    update (state) {
-      state.userName = 'BBBB' + state.userName
-    }
-  },
-  actions: {
-    update ({ commit }) {
-      // 假设请求
-      setTimeout(() => {
-        commit('update')
-      }, 2000)
-    }
-  }
-}
 export default createStore({
   modules: {
-    moduleA,
-    moduleB
-  }
+    car,
+    user,
+    category
+  },
+  plugins: [
+    createPersistedstate({
+      // 存在 Local Storage里的键名
+      key: 'vue3-pc-store',
+      // 需要持久化的模块
+      paths: ['user', 'cart']
+    })
+  ]
 })
