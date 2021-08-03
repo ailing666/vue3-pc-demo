@@ -1,12 +1,19 @@
 <template>
   <ul class="header-nav">
     <li class="home"><RouterLink to="/">首页</RouterLink></li>
-    <li v-for="item in list" :key="item.id">
-      <RouterLink :to="`/category/${item.id}`">{{ item.name }}</RouterLink>
-      <div class="layer">
+    <li
+      v-for="item in list"
+      :key="item.id"
+      @mouseenter="show(item)"
+      @mouseleave="hide(item)"
+    >
+      <RouterLink :to="`/category/${item.id}`" @click="hide(item)">{{
+        item.name
+      }}</RouterLink>
+      <div class="layer" :class="{ open: item.open }">
         <ul>
           <li v-for="sub in item.children" :key="sub.id">
-            <RouterLink :to="`/category/sub/${sub.id}`">
+            <RouterLink :to="`/category/sub/${sub.id}`" @click="hide(item)">
               <img :src="sub.picture" alt="" />
               <p>{{ sub.name }}</p>
             </RouterLink>
@@ -27,7 +34,15 @@ export default {
     const list = computed(() => {
       return store.state.category.list
     })
-    return { list }
+    // 鼠标移入显示item
+    const show = item => {
+      store.commit('category/show', item)
+    }
+    // 鼠标移出隐藏item
+    const hide = item => {
+      store.commit('category/hide', item)
+    }
+    return { list, show, hide }
   }
 }
 </script>
@@ -58,11 +73,6 @@ export default {
         color: @mainColor;
         border-bottom: 1px solid @mainColor;
       }
-      // 鼠标经过，显示二级目录
-      > .layer {
-        height: 132px;
-        opacity: 1;
-      }
     }
   }
 }
@@ -78,7 +88,11 @@ export default {
   background-color: #fff;
   box-shadow: 0 0 5px #ccc;
   transition: all 0.2s 0.1s;
-
+  // 鼠标经过，显示二级目录
+  &.open {
+    height: 132px;
+    opacity: 1;
+  }
   ul {
     display: flex;
     flex-wrap: wrap;
