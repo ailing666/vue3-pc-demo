@@ -21,10 +21,11 @@
     <!-- 弹层 -->
     <div class="layer">
       <h4>分类推荐 <small>根据您的购买或浏览记录推荐</small></h4>
-      <ul
-        v-if="currCategory && currCategory.goods && currCategory.goods.length"
-      >
-        <li v-for="item in currCategory.goods" :key="item.id">
+      <ul v-if="currCategory">
+        <li
+          v-for="item in currCategory.goods || currCategory.brands"
+          :key="item.id"
+        >
           <RouterLink to="/">
             <img :src="item.picture" alt="" />
             <div class="info">
@@ -42,6 +43,7 @@
 <script>
 import { computed, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
+import { findBrand } from '@/api/home.js'
 export default {
   name: 'HomeCategory',
   setup () {
@@ -52,7 +54,8 @@ export default {
     const brand = reactive({
       id: 'brand',
       name: '品牌',
-      children: [{ id: 'brand-chilren', name: '品牌推荐' }]
+      children: [{ id: 'brand-chilren', name: '品牌推荐' }],
+      brands: []
     })
     const menuList = computed(() => {
       const arr = list.value.map(item => {
@@ -60,7 +63,8 @@ export default {
           id: item.id,
           name: item.name,
           // 截图两个子分类
-          children: item.children && item.children.slice(0, 2)
+          children: item.children && item.children.slice(0, 2),
+          goods: item.goods
         }
       })
       arr.push(brand)
@@ -68,9 +72,14 @@ export default {
     })
     // 获取鼠标移入事件传入的categoryId
     const categoryId = ref(null)
+    // 计算弹出层推荐商品数据
     const currCategory = computed(() => {
       // 筛选列表中id与鼠标移入id一样的列表
-      return list.value.find(item => item.id === categoryId.value)
+      return menuList.value.find(item => item.id === categoryId.value)
+    })
+    // 获取品牌数据
+    findBrand().then(data => {
+      brand.brands = data.result
     })
     return { menuList, categoryId, currCategory }
   }
@@ -131,6 +140,25 @@ export default {
         border: 1px solid #eee;
         border-radius: 4px;
         background: #fff;
+        // 品牌推荐样式
+        &.brand {
+          height: 180px;
+          a {
+            align-items: flex-start;
+            img {
+              width: 120px;
+              height: 160px;
+            }
+            .info {
+              p {
+                margin-top: 8px;
+              }
+              .place {
+                color: #999;
+              }
+            }
+          }
+        }
         &:nth-child(3n) {
           margin-right: 0;
         }

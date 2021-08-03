@@ -1,4 +1,4 @@
-// 定义首页需要的接口函数
+// 定义首页头部分类需要的接口函数
 import request from '@/utils/request'
 
 /**
