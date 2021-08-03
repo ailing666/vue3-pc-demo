@@ -19,9 +19,12 @@
       </li>
     </ul>
     <!-- 弹层 -->
-    <div class="layer">
-      <h4>分类推荐 <small>根据您的购买或浏览记录推荐</small></h4>
-      <ul v-if="currCategory">
+    <div class="layer" v-if="currCategory">
+      <h4>
+        {{ currCategory.id === 'brand' ? '品牌' : '分类' }}推荐
+        <small>根据您的购买或浏览记录推荐</small>
+      </h4>
+      <ul>
         <li
           v-for="item in currCategory.goods || currCategory.brands"
           :key="item.id"
