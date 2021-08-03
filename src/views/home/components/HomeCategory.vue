@@ -16,6 +16,15 @@
             {{ sub.name }}
           </RouterLink>
         </template>
+        <template v-else>
+          <Skeleton
+            height="18px"
+            width="60px"
+            bg="rgba(255,255,255,0.2)"
+            style="margin-right:5px"
+          />
+          <Skeleton height="18px" width="50px" bg="rgba(255,255,255,0.2)" />
+        </template>
       </li>
     </ul>
     <!-- 弹层 -->
