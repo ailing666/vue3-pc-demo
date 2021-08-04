@@ -1,6 +1,11 @@
 <template>
   <div class="home-banner">
-    <Carousel class="carousel" :sliders="sliders" />
+    <Carousel
+      class="carousel"
+      :sliders="sliders"
+      :auto-play="true"
+      :duration="1000"
+    />
   </div>
 </template>
 <script>
@@ -10,6 +15,7 @@ export default {
   name: 'HomeBanner',
   setup () {
     const sliders = ref([])
+    // 请求轮播图数据
     findBanner().then(data => {
       sliders.value = data.result
     })

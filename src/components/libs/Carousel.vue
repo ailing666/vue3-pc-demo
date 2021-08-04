@@ -1,6 +1,6 @@
 <template>
   <div class="carousel">
-    <ul class="carousel-body">
+    <ul class="carousel-body" @mouseenter="stop" @mouseleave="start">
       <!-- fade类是显示的图片 -->
       <li
         class="carousel-item"
@@ -14,11 +14,11 @@
       </li>
     </ul>
     <!-- 上一张 -->
-    <a href="javascript:;" class="carousel-btn prev"
+    <a href="javascript:;" class="carousel-btn prev" @click="step(-1)"
       ><i class="iconfont icon-angle-left"></i
     ></a>
     <!-- 下一张 -->
-    <a href="javascript:;" class="carousel-btn next"
+    <a href="javascript:;" class="carousel-btn next" @click="step(1)"
       ><i class="iconfont icon-angle-right"></i
     ></a>
     <div class="carousel-indicator">
@@ -33,7 +33,13 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+/**
+ * 自动播放，暴露自动轮播属性，设置了就自动轮播
+ * 如果有自动播放，鼠标进入离开，暂停，开启
+ * 指示器切换，上一张，下一张
+ * 销毁组件，清理定时器
+ */
+import { ref, watch, onUnmounted } from 'vue'
 export default {
   name: 'Carousel',
   props: {
@@ -41,12 +47,86 @@ export default {
     sliders: {
       type: Array,
       default: () => []
+    },
+    // 是否自动播放
+    autoPlay: {
+      type: Boolean,
+      default: false
+    },
+    // 自动播放间隔时间
+    duration: {
+      type: Number,
+      default: 2000
     }
   },
-  setup () {
+  setup (props) {
     // 默认显示的图片的索引
     const index = ref(0)
-    return { index }
+
+    let timer = null
+    // 自动播放函数
+    const autoPlayFn = () => {
+      // 先清空定时器
+      clearInterval(timer)
+      // 定义定时器
+      timer = setInterval(() => {
+        // 将切换的索引
+        index.value++
+        if (index.value >= props.sliders.length) {
+          index.value = 0
+        }
+      }, props.duration)
+    }
+    // 自动播放条件：有数据 && autoPlay为true
+    // 监听props.sliders
+    watch(
+      () => props.sliders,
+      newVal => {
+        if (newVal.length && props.autoPlay) {
+          index.value = 0
+          autoPlayFn()
+        }
+      },
+      // 默认就执行一遍
+      { immediate: true }
+    )
+
+    // 鼠标移入函数
+    const stop = () => {
+      // 如果正在自动播放，就暂停
+      if (timer) clearInterval(timer)
+    }
+
+    // 鼠标移出函数
+    const start = () => {
+      // 如果满足条件就自动播放
+      if (props.sliders.length && props.autoPlay) {
+        autoPlayFn()
+      }
+    }
+
+    // 点击事件
+    const step = val => {
+      // 将要切换的索引
+      const i = index.value + val
+      // 超出了最大索引，就变为0
+      if (i >= props.sliders.length) {
+        index.value = 0
+        return
+      }
+      // 小于0就变切换为最后那一张
+      if (i < 0) {
+        index.value = props.sliders.length - 1
+        return
+      }
+      // 正常情况直接赋值
+      index.value = i
+    }
+    // 组件销毁，清理定时器
+    onUnmounted(() => {
+      clearInterval(timer)
+    })
+    return { index, stop, start, step }
   }
 }
 </script>
