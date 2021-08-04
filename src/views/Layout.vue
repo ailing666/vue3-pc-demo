@@ -31,6 +31,6 @@ export default {
 
 <style scoped lang="less">
 .main {
-  height: 600px;
+  height: 2000px;
 }
 </style>

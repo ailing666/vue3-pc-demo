@@ -4,6 +4,7 @@
 
 import Skeleton from './Skeleton.vue'
 import Carousel from './Carousel.vue'
+import More from './More.vue'
 
 export default {
   install (app) {
@@ -11,5 +12,6 @@ export default {
     // 挂载原型 app.config.globalProperties 方式
     app.component(Skeleton.name, Skeleton)
     app.component(Carousel.name, Carousel)
+    app.component(More.name, More)
   }
 }

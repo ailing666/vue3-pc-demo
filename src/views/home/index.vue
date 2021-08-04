@@ -8,14 +8,17 @@
         <HomeBanner />
       </div>
     </div>
+    <!-- 新鲜好物 -->
+    <HomeNew />
   </div>
 </template>
 <script>
 import HomeCategory from './components/HomeCategory'
 import HomeBanner from './components/HomeBanner'
+import HomeNew from './components/HomeNew'
 export default {
   name: 'PageHome',
-  components: { HomeCategory, HomeBanner }
+  components: { HomeCategory, HomeBanner, HomeNew }
 }
 </script>
 <style scoped lang="less"></style>
