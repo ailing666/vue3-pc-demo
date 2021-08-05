@@ -4,25 +4,29 @@
       <!-- 右侧插槽 -->
       <template #right><More path="/"/></template>
       <!-- 面板内容 -->
-      <ul class="goods-list">
-        <li v-for="item in goods" :key="item.id">
-          <RouterLink :to="`/product/${item.id}`">
-            <img :src="item.picture" alt="" />
-            <p class="name ellipsis">{{ item.name }}</p>
-            <p class="price">&yen;{{ item.price }}</p>
-          </RouterLink>
-        </li>
-      </ul>
+      <Transition>
+        <ul v-if="goods.length" class="goods-list">
+          <li v-for="item in goods" :key="item.id">
+            <RouterLink :to="`/product/${item.id}`">
+              <img :src="item.picture" alt="" />
+              <p class="name ellipsis">{{ item.name }}</p>
+              <p class="price">&yen;{{ item.price }}</p>
+            </RouterLink>
+          </li>
+        </ul>
+        <HomeSkeleton bg="#f0f9f4" v-else />
+      </Transition>
     </HomePanel>
   </div>
 </template>
 <script>
 import { ref } from 'vue'
 import HomePanel from './HomePanel'
+import HomeSkeleton from './HomeSkeleton'
 import { findNew } from '@/api/home'
 export default {
   name: 'HomeNew',
-  components: { HomePanel },
+  components: { HomePanel, HomeSkeleton },
   setup () {
     const goods = ref([])
     // 获取新鲜好物
