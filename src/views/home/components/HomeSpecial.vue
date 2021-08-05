@@ -4,7 +4,7 @@
     <div ref="target" class="special-list">
       <div class="special-item" v-for="item in specialList" :key="item.id">
         <RouterLink to="/">
-          <img :src="item.cover" alt />
+          <img v-lazy="item.cover" alt />
           <div class="meta">
             <p class="title">
               <span class="top ellipsis">{{ item.title }}</span>

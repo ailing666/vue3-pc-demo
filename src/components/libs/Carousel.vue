@@ -9,7 +9,7 @@
         :class="{ fade: index === i }"
       >
         <RouterLink to="/">
-          <img :src="item.imgUrl" alt="" />
+          <img v-lazy="item.imgUrl" alt="" />
         </RouterLink>
       </li>
     </ul>
