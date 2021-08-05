@@ -24,6 +24,10 @@ export const useLazyData = callBack => {
           result.value = data.result
         })
       }
+    },
+    {
+      // 配置，只要相交，就触发
+      threshold: 0
     }
   )
   // 返回--->数据（dom,后台数据）
