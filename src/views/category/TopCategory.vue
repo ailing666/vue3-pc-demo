@@ -89,8 +89,8 @@ export default {
     watch(
       () => route.params.id,
       newVal => {
-        // 有id时CIA请求
-        newVal && getSubList()
+        // 有id时且在category下id改变时才请求
+        if (newVal && `/category/${newVal}` === route.path) getSubList()
       },
       // 初始化就要监听
       { immediate: true }
