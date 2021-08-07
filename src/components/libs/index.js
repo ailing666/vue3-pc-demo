@@ -5,6 +5,8 @@
 import Skeleton from './Skeleton.vue'
 import Carousel from './Carousel.vue'
 import More from './More.vue'
+import BreadItem from './BreadItem.vue'
+import Bread from './Bread.vue'
 import defaultImg from '@/assets/images/200.png'
 
 export default {
@@ -13,6 +15,8 @@ export default {
     // 挂载原型 app.config.globalProperties 方式
     app.component(Skeleton.name, Skeleton)
     app.component(Carousel.name, Carousel)
+    app.component(Bread.name, Bread)
+    app.component(BreadItem.name, BreadItem)
     app.component(More.name, More)
     // 自定义指令
     defineDirective(app)
