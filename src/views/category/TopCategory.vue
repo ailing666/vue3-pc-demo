@@ -4,7 +4,10 @@
       <!-- 面包屑 -->
       <Bread>
         <BreadItem to="/">首页</BreadItem>
-        <BreadItem>{{ topCategory.name }}</BreadItem>
+        <Transition name="fade-right" mode="out-in">
+          <!-- 不同的key可以创建移除元素，创造触发动画条件 -->
+          <BreadItem :key="topCategory.id">{{ topCategory.name }}</BreadItem>
+        </Transition>
       </Bread>
       <!-- 轮播图 -->
       <Carousel
