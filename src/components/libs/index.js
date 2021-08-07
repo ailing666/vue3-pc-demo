@@ -2,22 +2,22 @@
 // vue3.0没有全局过滤器。
 // vue3.0插件写法要素：导出一个对象，有install函数，默认传入了app应用实例，app基础之上扩展
 
-import Skeleton from './Skeleton.vue'
-import Carousel from './Carousel.vue'
-import More from './More.vue'
-import BreadItem from './BreadItem.vue'
-import Bread from './Bread.vue'
 import defaultImg from '@/assets/images/200.png'
-
+// 批量导入需要使用一个函数 require.context(dir,deep,matching)
+// 参数：1. 目录  2. 是否加载子目录  3. 加载的正则匹配
+// 导入当前目录下的，一级目录的.vue后缀的文件
+const importFn = require.context('./', false, /\.vue$/)
 export default {
   install (app) {
     // 在app上进行扩展，app提供 component（组件） directive（指令） 函数
     // 挂载原型 app.config.globalProperties 方式
-    app.component(Skeleton.name, Skeleton)
-    app.component(Carousel.name, Carousel)
-    app.component(Bread.name, Bread)
-    app.component(BreadItem.name, BreadItem)
-    app.component(More.name, More)
+    importFn.keys().forEach(key => {
+      // 导入组件
+      const component = importFn(key).default
+      // 注册组件
+      app.component(component.name, component)
+    })
+
     // 自定义指令
     defineDirective(app)
   }
