@@ -1,11 +1,16 @@
 <template>
   <div class="sub-category">
-    Sub-CategorySub-CategorySub-CategorySub-Category
+    <div class="container">
+      <!-- 面包屑 -->
+      <SubBread />
+    </div>
   </div>
 </template>
+
 <script>
+import SubBread from './components/SubBread'
 export default {
-  name: 'SubCategory'
+  name: 'SubCategory',
+  components: { SubBread }
 }
 </script>
-<style scoped lang="less"></style>
