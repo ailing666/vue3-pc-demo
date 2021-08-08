@@ -5,6 +5,8 @@
       <SubBread />
       <!-- 筛选框 -->
       <SubFilter />
+      <!-- 排序框 -->
+      <div class="goods-list"><SubSort /></div>
       <!-- 复选框 -->
       <Checkbox v-model="isAllChecked" @change="changeFn">全选</Checkbox>
     </div>
@@ -15,9 +17,10 @@
 import { ref } from 'vue'
 import SubBread from './components/SubBread'
 import SubFilter from './components/SubFilter'
+import SubSort from './components/SubSort'
 export default {
   name: 'SubCategory',
-  components: { SubBread, SubFilter },
+  components: { SubBread, SubSort, SubFilter },
   setup () {
     // 测试
     const isAllChecked = ref(false)
@@ -28,3 +31,10 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+.goods-list {
+  background: #fff;
+  padding: 0 25px;
+  margin-top: 25px;
+}
+</style>
