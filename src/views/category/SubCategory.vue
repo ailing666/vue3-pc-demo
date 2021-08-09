@@ -4,10 +4,10 @@
       <!-- 面包屑 -->
       <SubBread />
       <!-- 筛选框 -->
-      <SubFilter />
+      <SubFilter @filter-change="changeFilter" />
       <!-- 排序框 -->
       <div class="goods-list">
-        <SubSort />
+        <SubSort @sort-change="changeSort" />
         <ul>
           <li v-for="item in goodsList" :key="item.id">
             <GoodsItem :goods="item" />
@@ -77,20 +77,34 @@ export default {
       () => route.params.id,
       newVal => {
         if (newVal && route.path === '/category/sub/' + newVal) {
-          // 将劫镖清空
-          goodsList.value = []
-          // 将请求参数恢复初始值
-          reqParams = {
-            page: 1,
-            pageSize: 20
-          }
-          // 加载完毕关闭
-          finished.value = false
+          initParams()
         }
       }
     )
+    const initParams = () => {
+      // 将劫镖清空
+      goodsList.value = []
+      // 将请求参数恢复初始值
+      reqParams.page = 1
+      reqParams.pageSize = 20
 
-    return { loading, finished, goodsList, getData }
+      // 加载完毕关闭
+      finished.value = false
+    }
+    // 监听筛选区改变
+    const changeFilter = filterParams => {
+      initParams()
+      // 保留之前参数，合并当前参数
+      reqParams = { ...reqParams, ...filterParams }
+    }
+    // 监听排序改变
+    const changeSort = sortParams => {
+      initParams()
+      // 保留之前参数，合并当前参数
+      reqParams = { ...reqParams, ...sortParams }
+    }
+
+    return { loading, finished, goodsList, getData, changeFilter, changeSort }
   }
 }
 </script>

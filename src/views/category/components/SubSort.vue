@@ -3,25 +3,25 @@
     <div class="sort">
       <a
         href="javascript:;"
-        :class="{ active: sortField === null }"
+        :class="{ active: sortParams.sortField === null }"
         @click="sortFn(null)"
         >默认排序</a
       >
       <a
         href="javascript:;"
-        :class="{ active: sortField === 'publishTime' }"
+        :class="{ active: sortParams.sortField === 'publishTime' }"
         @click="sortFn('publishTime')"
         >最新商品</a
       >
       <a
         href="javascript:;"
-        :class="{ active: sortField === 'orderNum' }"
+        :class="{ active: sortParams.sortField === 'orderNum' }"
         @click="sortFn('orderNum')"
         >最高人气</a
       >
       <a
         href="javascript:;"
-        :class="{ active: sortField === 'evaluateNum' }"
+        :class="{ active: sortParams.sortField === 'evaluateNum' }"
         @click="sortFn('evaluateNum')"
         >评论最多</a
       >
@@ -30,28 +30,36 @@
         <i
           class="arrow up"
           :class="{
-            active: sortField === 'price' && sortMethod === 'asc'
+            active:
+              sortParams.sortField === 'price' &&
+              sortParams.sortMethod === 'asc'
           }"
         />
         <i
           class="arrow down"
           :class="{
-            active: sortField === 'price' && sortMethod === 'desc'
+            active:
+              sortParams.sortField === 'price' &&
+              sortParams.sortMethod === 'desc'
           }"
         />
       </a>
     </div>
     <div class="check">
-      <Checkbox>仅显示有货商品</Checkbox>
-      <Checkbox>仅显示特惠商品</Checkbox>
+      <Checkbox @change="changeCheck" v-model="sortParams.inventory"
+        >仅显示有货商品</Checkbox
+      >
+      <Checkbox @change="changeCheck" v-model="sortParams.onlyDiscount"
+        >仅显示特惠商品</Checkbox
+      >
     </div>
   </div>
 </template>
 <script>
-import { reactive, toRefs } from 'vue'
+import { reactive } from 'vue'
 export default {
   name: 'SubSort',
-  setup () {
+  setup (props, { emit }) {
     // sortField====>null,publishTime,orderNum,evaluateNum,price
     // 默认排序,最新商品,最高人气，评论最多
     // sortMethod====>asc为正序 desc为倒序
@@ -63,27 +71,32 @@ export default {
       // 价格排序
       sortMethod: null
     })
-    const sortData = toRefs(sortParams)
-    const { sortField, sortMethod } = sortData
     const sortFn = val => {
-      sortField.value = val
       // 价格
       if (val === 'price') {
         // 第一次点击默认是降序
-        if (sortMethod.value === null) {
-          sortMethod.value = 'desc'
+        if (sortParams.sortMethod === null) {
+          sortParams.sortMethod = 'desc'
         } else {
           // 取反
-          sortMethod.value = sortMethod.value === 'desc' ? 'asc' : 'desc'
+          sortParams.sortMethod =
+            sortParams.sortMethod === 'desc' ? 'asc' : 'desc'
         }
       } else {
         // 其他
         // 如果排序未改变停止逻辑
-        if (sortField.value === val) return
-        sortMethod.value = null
+        if (sortParams.sortField === val) return
+        sortParams.sortMethod = null
       }
+      sortParams.sortField = val
+      // 触发sort-change事件
+      emit('sort-change', sortParams)
     }
-    return { ...sortData, sortFn }
+    const changeCheck = () => {
+      // 触发sort-change事件
+      emit('sort-change', sortParams)
+    }
+    return { sortParams, sortFn, changeCheck }
   }
 }
 </script>

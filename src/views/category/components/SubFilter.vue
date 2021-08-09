@@ -5,7 +5,7 @@
       <div class="head">品牌：</div>
       <div class="body">
         <span
-          @click="filterData.selectedBrand = brand.id"
+          @click="changeBrand(brand.id)"
           :class="{ active: filterData.selectedBrand === brand.id }"
           v-for="brand in filterData.brands"
           :key="brand.id"
@@ -14,13 +14,13 @@
       </div>
     </div>
     <!-- 其他属性 -->
-    <div class="item" v-for="p in filterData.saleProperties" :key="p.id">
-      <div class="head">{{ p.name }}：</div>
+    <div class="item" v-for="prop in filterData.saleProperties" :key="prop.id">
+      <div class="head">{{ prop.name }}：</div>
       <div class="body">
         <span
-          @click="p.selectedProp = attr.id"
-          :class="{ active: p.selectedProp === attr.id }"
-          v-for="attr in p.properties"
+          @click="changeAttr(prop, attr.id)"
+          :class="{ active: prop.selectedProp === attr.id }"
+          v-for="attr in prop.properties"
           :key="attr.id"
           >{{ attr.name }}</span
         >
@@ -41,7 +41,7 @@ import { useRoute } from 'vue-router'
 import { ref, watch } from 'vue'
 export default {
   name: 'SubFilter',
-  setup () {
+  setup (props, { emit }) {
     const route = useRoute()
     // 存放筛选的数据
     const filterData = ref(null)
@@ -73,7 +73,38 @@ export default {
         immediate: true
       }
     )
-    return { filterData, isFilterLoading }
+    // 获取筛选参数
+    const getFilterParams = () => {
+      const filterParams = {}
+      const attrs = []
+      filterParams.brandId = filterData.value.selectedBrand
+      filterData.value.saleProperties.forEach(p => {
+        const attr = p.properties.find(attr => attr.id === p.selectedProp)
+        if (attr && attr.id !== undefined) {
+          attrs.push({ groupName: p.name, propertyName: attr.name })
+        }
+      })
+      if (attrs.length) filterParams.attrs = attrs
+      return filterParams
+    }
+
+    // 选择品牌
+    const changeBrand = brandId => {
+      console.log('brandId: ', brandId)
+      if (filterData.value.selectedBrand === brandId) return
+      filterData.value.selectedBrand = brandId
+      emit('filter-change', getFilterParams())
+    }
+    // 选中属性
+    const changeAttr = (prop, attrId) => {
+      console.log('attrId: ', attrId)
+      console.log('prop: ', prop)
+      if (prop.selectedProp === attrId) return
+      prop.selectedProp = attrId
+      emit('filter-change', getFilterParams())
+    }
+
+    return { filterData, isFilterLoading, changeBrand, changeAttr }
   }
 }
 </script>
