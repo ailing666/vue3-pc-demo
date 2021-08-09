@@ -9,8 +9,8 @@
       <div class="goods-list">
         <SubSort />
         <ul>
-          <li v-for="i in 20" :key="i">
-            <GoodsItem :goods="{}" />
+          <li v-for="item in goodsList" :key="item.id">
+            <GoodsItem :goods="item" />
           </li>
         </ul>
         <InfiniteLoading
@@ -26,26 +26,71 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import SubSort from './components/SubSort'
 import SubBread from './components/SubBread'
 import SubFilter from './components/SubFilter'
-import SubSort from './components/SubSort'
 import GoodsItem from './components/GoodsItem'
+import { findSubCategoryGoods } from '@/api/category'
 export default {
   name: 'SubCategory',
-  components: { SubBread, GoodsItem, SubSort, SubFilter },
+  components: { SubBread, SubFilter, SubSort, GoodsItem },
   setup () {
-    // 测试
-    const isAllChecked = ref(false)
-    const changeFn = v => {
-      console.log('changeFn', v)
-    }
+    const route = useRoute()
+    // 是否加载中
     const loading = ref(false)
+    // 是否加载完毕
     const finished = ref(false)
-    const getData = () => {
-      console.log('拿数据')
+    // 最终商品列表
+    const goodsList = ref([])
+    // 查询参数
+    let reqParams = {
+      page: 1,
+      pageSize: 20
     }
-    return { isAllChecked, loading, finished, changeFn, getData }
+    // 获取数据函数
+    const getData = () => {
+      // 变为加载中
+      loading.value = true
+      // 将当前商品id加到请求参数中
+      reqParams.categoryId = route.params.id
+      // 请求数据
+      findSubCategoryGoods(reqParams).then(({ result }) => {
+        // 如果请求导数据
+        if (result.items.length) {
+          // 将数据添加到列表尾部
+          goodsList.value.push(...result.items)
+          // 页码+1
+          reqParams.page++
+        } else {
+          // 加载完毕
+          finished.value = true
+        }
+        // 请求结束
+        loading.value = false
+      })
+    }
+
+    // 切换二级分类重新加载
+    watch(
+      () => route.params.id,
+      newVal => {
+        if (newVal && route.path === '/category/sub/' + newVal) {
+          // 将劫镖清空
+          goodsList.value = []
+          // 将请求参数恢复初始值
+          reqParams = {
+            page: 1,
+            pageSize: 20
+          }
+          // 加载完毕关闭
+          finished.value = false
+        }
+      }
+    )
+
+    return { loading, finished, goodsList, getData }
   }
 }
 </script>
