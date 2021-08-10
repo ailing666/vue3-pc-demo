@@ -90,17 +90,17 @@ export default {
 
     // 选择品牌
     const changeBrand = brandId => {
-      console.log('brandId: ', brandId)
+      // 点击相同的tab不请求
       if (filterData.value.selectedBrand === brandId) return
       filterData.value.selectedBrand = brandId
+      // 触发filter-change
       emit('filter-change', getFilterParams())
     }
     // 选中属性
     const changeAttr = (prop, attrId) => {
-      console.log('attrId: ', attrId)
-      console.log('prop: ', prop)
       if (prop.selectedProp === attrId) return
       prop.selectedProp = attrId
+      // 触发filter-change
       emit('filter-change', getFilterParams())
     }
 
