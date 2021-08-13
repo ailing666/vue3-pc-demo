@@ -12,7 +12,7 @@
     </dl>
     <dl>
       <dt>配送</dt>
-      <dd>至</dd>
+      <dd>至<City /></dd>
     </dl>
     <dl>
       <dt>服务</dt>
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import City from '@/components/libs/City.vue'
 export default {
   name: 'GoodsName',
   props: {
@@ -34,7 +35,8 @@ export default {
       type: Object,
       default: () => {}
     }
-  }
+  },
+  components: { City }
 }
 </script>
 
