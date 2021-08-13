@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import City from '@/components/libs/City.vue'
 export default {
   name: 'GoodsName',
   props: {
@@ -35,8 +34,7 @@ export default {
       type: Object,
       default: () => {}
     }
-  },
-  components: { City }
+  }
 }
 </script>
 
