@@ -6,12 +6,18 @@
       <i class="iconfont icon-angle-down"></i>
     </div>
     <div class="option" v-if="active">
-      <span class="ellipsis" v-for="i in 24" :key="i">北京市</span>
+      <div v-if="loading" class="loading"></div>
+      <template v-else>
+        <span class="ellipsis" v-for="item in currList" :key="item.code">{{
+          item.name
+        }}</span>
+      </template>
     </div>
   </div>
 </template>
 <script>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import axios from 'axios'
 import { onClickOutside } from '@vueuse/core'
 export default {
   name: 'City',
@@ -19,7 +25,17 @@ export default {
     // 控制展开收起,默认收起
     const active = ref(false)
     // 打开城市选择弹框
-    const openDialog = () => (active.value = true)
+    const loading = ref(false)
+    const cityData = ref([])
+    const openDialog = () => {
+      active.value = true
+      loading.value = true
+      // 获取数据
+      getCityData().then(data => {
+        cityData.value = data
+        loading.value = false
+      })
+    }
     // 关闭城市选择弹框
     const closeDialog = () => (active.value = false)
     // 切换展开收起
@@ -30,7 +46,35 @@ export default {
     onClickOutside(target, () => {
       closeDialog()
     })
-    return { active, toggleDialog, target }
+
+    // 获取城市数据
+    // 1. 数据在哪里？https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/area.json
+    // 2. 何时获取？打开城市列表的时候，做个内存中缓存
+    // 3. 怎么使用数据？定义计算属性，根据点击的省份城市展示
+    const getCityData = () => {
+      // 这个位置可能有异常操作，封装成promise
+      return new Promise((resolve, reject) => {
+        if (window.cityData) {
+          // 有缓存
+          resolve(window.cityData)
+        } else {
+          // 无缓存
+          const url =
+            'https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/area.json'
+          axios.get(url).then(res => {
+            window.cityData = res.data
+            resolve(window.cityData)
+          })
+        }
+      })
+    }
+    // 定义计算属性
+    const currList = computed(() => {
+      const currList = cityData.value
+      // TODO 根据点击的省份城市获取对应的列表
+      return currList
+    })
+    return { active, toggleDialog, target, getCityData, currList }
   }
 }
 </script>
@@ -72,6 +116,11 @@ export default {
     display: flex;
     flex-wrap: wrap;
     padding: 10px;
+    .loading {
+      height: 290px;
+      width: 100%;
+      background: url(../../assets/images/loading.gif) no-repeat center;
+    }
     > span {
       width: 130px;
       text-align: center;
