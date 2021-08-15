@@ -1,8 +1,8 @@
 <template>
   <div class="city" ref="target">
     <div class="select" @click="toggleDialog" :class="{ active }">
-      <span class="placeholder">请选择配送地址</span>
-      <span class="value"></span>
+      <span v-if="!fullLocation" class="placeholder">{{ placeholder }}</span>
+      <span v-else class="value">{{ fullLocation }}</span>
       <i class="iconfont icon-angle-down"></i>
     </div>
     <div class="option" v-if="active">
@@ -21,6 +21,16 @@ import axios from 'axios'
 import { onClickOutside } from '@vueuse/core'
 export default {
   name: 'City',
+  props: {
+    fullLocation: {
+      type: String,
+      default: ''
+    },
+    placeholder: {
+      type: String,
+      defulat: '请选择配送地址'
+    }
+  },
   setup () {
     // 控制展开收起,默认收起
     const active = ref(false)

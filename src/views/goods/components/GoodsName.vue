@@ -12,7 +12,7 @@
     </dl>
     <dl>
       <dt>配送</dt>
-      <dd>至<City /></dd>
+      <dd>至<City :fullLocation="fullLocation" /></dd>
     </dl>
     <dl>
       <dt>服务</dt>
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import { ref } from 'vue'
 export default {
   name: 'GoodsName',
   props: {
@@ -34,6 +35,29 @@ export default {
       type: Object,
       default: () => {}
     }
+  },
+  setup (props) {
+    // 默认地址
+    const provinceCode = ref('110000')
+    const cityCode = ref('119900')
+    const countyCode = ref('110101')
+    const fullLocation = ref('北京市 市辖区 东城区')
+
+    // 有默认地址
+    if (props.goods.userAddresses) {
+      // 如果isDefault为1，说明有默认值
+      const defaultAddr = props.goods.userAddresses.find(
+        addr => addr.isDefault === 1
+      )
+      // 如果有默认值，就赋值
+      if (defaultAddr) {
+        provinceCode.value = defaultAddr.provinceCode
+        cityCode.value = defaultAddr.cityCode
+        countyCode.value = defaultAddr.countyCode
+        fullLocation.value = defaultAddr.fullLocation
+      }
+    }
+    return { fullLocation }
   }
 }
 </script>
