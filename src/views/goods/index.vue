@@ -19,6 +19,8 @@
         </div>
         <div class="spec">
           <GoodsName :goods="goods" />
+          <!-- 规格组件 -->
+          <GoodsSku :goods="goods" />
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -46,9 +48,11 @@ import { findGoods } from '@/api/product'
 import { useRoute } from 'vue-router'
 import GoodsSales from './components/GoodsSales'
 import GoodsName from './components/GoodsName'
+import GoodsSku from './components/GoodsSku'
+
 export default {
   name: 'GoodsPage',
-  components: { GoodsImage, GoodsRelevant, GoodsSales, GoodsName },
+  components: { GoodsImage, GoodsRelevant, GoodsSales, GoodsSku, GoodsName },
   setup () {
     const goods = useGoods()
     return { goods }
