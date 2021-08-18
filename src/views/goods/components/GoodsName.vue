@@ -12,7 +12,7 @@
     </dl>
     <dl>
       <dt>配送</dt>
-      <dd>至<City :fullLocation="fullLocation" /></dd>
+      <dd>至<City @change="changeCity" :fullLocation="fullLocation" /></dd>
     </dl>
     <dl>
       <dt>服务</dt>
@@ -57,7 +57,15 @@ export default {
         fullLocation.value = defaultAddr.fullLocation
       }
     }
-    return { fullLocation }
+
+    // 城市选中事件处理函数
+    const changeCity = result => {
+      provinceCode.value = result.provinceCode
+      cityCode.value = result.cityCode
+      countyCode.value = result.countyCode
+      fullLocation.value = result.fullLocation
+    }
+    return { fullLocation, changeCity }
   }
 }
 </script>
