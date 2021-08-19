@@ -5,14 +5,14 @@
       <dd>
         <template v-for="val in item.values" :key="val.name">
           <img
-            :class="{ selected: val.selected }"
+            :class="{ selected: val.selected, disabled: val.disabled }"
             @click="clickSpecs(item, val)"
             v-if="val.picture"
             :src="val.picture"
             :title="val.name"
           />
           <span
-            :class="{ selected: val.selected }"
+            :class="{ selected: val.selected, disabled: val.disabled }"
             @click="clickSpecs(item, val)"
             v-else
             >{{ val.name }}</span
@@ -51,6 +51,36 @@ const getPathMap = skus => {
   })
   return pathMap
 }
+
+// 得到当前选中规格集合
+const getSelectedArr = specs => {
+  const selectedArr = []
+  specs.forEach(spec => {
+    // 获取当前的选中状态
+    const selectedVal = spec.values.find(val => val.selected)
+    // 如果是选中的，就push进数组，否者就push进去undefined
+    selectedArr.push(selectedVal ? selectedVal.name : undefined)
+  })
+  return selectedArr
+}
+
+// 更新按钮的禁用状态
+const updateDisabledStatus = (specs, pathMap) => {
+  specs.forEach((spec, i) => {
+    // 获取选中的数组
+    const selectedArr = getSelectedArr(specs)
+    spec.values.forEach(val => {
+      // 已经选中的按钮不用判断
+      if (val.name === selectedArr[i]) return false
+      // 未选中的替换对应的值
+      selectedArr[i] = val.name
+      // 过滤无效值得到key，拼接成键名
+      const key = selectedArr.filter(v => v).join(spliter)
+      // 如果在pathMap中查找不到对应键名，就禁用
+      val.disabled = !pathMap[key]
+    })
+  })
+}
 export default {
   name: 'GoodsSku',
   props: {
@@ -61,8 +91,11 @@ export default {
   },
   setup (props) {
     const pathMap = getPathMap(props.goods.skus)
-    console.log('pathMap: ', pathMap)
+    // 组件初始化的时候更新禁用状态
+    updateDisabledStatus(props.goods.specs, pathMap)
     const clickSpecs = (item, val) => {
+      // 如果是禁用状态不作为
+      if (val.disabled) return false
       // 选中与取消选中逻辑
       if (val.selected) {
         // 如果点击的item已选中再次点击需取消选中
@@ -75,6 +108,8 @@ export default {
         })
         val.selected = true
       }
+      // 点击的时候更新禁用状态
+      updateDisabledStatus(props.goods.specs, pathMap)
     }
     return { clickSpecs }
   }
