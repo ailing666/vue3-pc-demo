@@ -20,7 +20,7 @@
         <div class="spec">
           <GoodsName :goods="goods" />
           <!-- 规格组件 -->
-          <GoodsSku :goods="goods" />
+          <GoodsSku :goods="goods" @change="changeSku" />
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -28,7 +28,7 @@
       <!-- 商品详情 -->
       <div class="goods-footer">
         <div class="goods-article">
-          <!-- 商品+评价 -->
+          <!-- 商品评价 -->
           <div class="goods-tabs"></div>
           <!-- 注意事项 -->
           <div class="goods-warn"></div>
@@ -55,7 +55,16 @@ export default {
   components: { GoodsImage, GoodsRelevant, GoodsSales, GoodsSku, GoodsName },
   setup () {
     const goods = useGoods()
-    return { goods }
+    // sku改变时候触发
+    const changeSku = sku => {
+      console.log('sku: ', sku)
+      if (sku.skuId) {
+        goods.value.price = sku.price
+        goods.value.oldPrice = sku.oldPrice
+        goods.value.inventory = sku.inventory
+      }
+    }
+    return { goods, changeSku }
   }
 }
 // 获取商品详情
