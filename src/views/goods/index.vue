@@ -23,6 +23,7 @@
           <GoodsSku :goods="goods" @change="changeSku" />
           <!-- 数量选择 -->
           <NumBox label="数量" v-model="num" :max="goods.inventory" />
+          <Button type="primary" style="margin-top:20px;">加入购物车</Button>
         </div>
       </div>
       <!-- 商品推荐 -->
