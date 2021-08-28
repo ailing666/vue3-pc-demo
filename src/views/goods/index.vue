@@ -21,6 +21,8 @@
           <GoodsName :goods="goods" />
           <!-- 规格组件 -->
           <GoodsSku :goods="goods" @change="changeSku" />
+          <!-- 数量选择 -->
+          <NumBox label="数量" v-model="num" :max="goods.inventory" />
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -57,14 +59,14 @@ export default {
     const goods = useGoods()
     // sku改变时候触发
     const changeSku = sku => {
-      console.log('sku: ', sku)
       if (sku.skuId) {
         goods.value.price = sku.price
         goods.value.oldPrice = sku.oldPrice
         goods.value.inventory = sku.inventory
       }
     }
-    return { goods, changeSku }
+    const num = ref(1)
+    return { goods, changeSku, num }
   }
 }
 // 获取商品详情
