@@ -32,7 +32,7 @@
       <div class="goods-footer">
         <div class="goods-article">
           <!-- 商品评价 -->
-          <div class="goods-tabs"></div>
+          <GoodsTabs :goods="goods" />
           <!-- 注意事项 -->
           <div class="goods-warn"></div>
         </div>
@@ -52,10 +52,18 @@ import { useRoute } from 'vue-router'
 import GoodsSales from './components/GoodsSales'
 import GoodsName from './components/GoodsName'
 import GoodsSku from './components/GoodsSku'
+import GoodsTabs from './components/GoodsTabs'
 
 export default {
   name: 'GoodsPage',
-  components: { GoodsImage, GoodsRelevant, GoodsSales, GoodsSku, GoodsName },
+  components: {
+    GoodsImage,
+    GoodsRelevant,
+    GoodsSales,
+    GoodsSku,
+    GoodsName,
+    GoodsTabs
+  },
   setup () {
     const goods = useGoods()
     // sku改变时候触发
